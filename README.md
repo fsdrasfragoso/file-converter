@@ -32,3 +32,17 @@ Via Composer:
 
 ```bash
 composer require fragosoftware/file-converter
+```
+A biblioteca funciona como um Conversion Kernel, semelhante ao Kernel do Laravel.
+
+Você apenas chama:
+
+```php
+
+use FragosoSoftware\FileConverter\Core\Conversion\ConverterManager;
+
+$manager = new ConverterManager();
+
+$manager->convert('arquivo.docx', 'arquivo.pdf');
+```
+

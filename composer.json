@@ -13,7 +13,15 @@
   ],
   "require": {
     "php": "^7.3 || ^8.0",
-    "illuminate/support": "^7.0 || ^8.0 || ^9.0 || ^10.0 || ^11.0"
+    "barryvdh/laravel-dompdf": "^0.9.0",
+    "bnbwebexpertise/pdf-to-image": "^1.2",
+    "illuminate/support": "^7.0 || ^8.0 || ^9.0 || ^10.0 || ^11.0",
+    "phpoffice/phpspreadsheet": "1.29",
+    "phpoffice/phpword": "^1.4",
+    "spatie/image": "^1.10",
+    "spatie/pdf-to-image": "^2.3",
+    "spatie/pdf-to-text": "^1.54",
+    "spatie/temporary-directory": "^2.3"
   },
   "require-dev": {
     "phpunit/phpunit": "^9.5",
@@ -30,7 +38,7 @@
     }
   },
   "scripts": {
-    "test": "phpunit"
+    "test": "vendor/bin/phpunit"
   },
   "config": {
     "sort-packages": true
