@@ -1,0 +1,40 @@
+{
+  "name": "fragosoftware/file-converter",
+  "description": "Biblioteca PHP para conversão de arquivos (compatível com Laravel 7+).",
+  "type": "library",
+  "license": "MIT",
+  "keywords": ["laravel", "converter", "files", "conversion"],
+  "authors": [
+    {
+      "name": "Esdras Fragoso da Silva Neto",
+      "email": "esdrasfragoso@gmail.com",
+      "homepage": "https://fragososoftware.com/"
+    }
+  ],
+  "require": {
+    "php": "^7.3 || ^8.0",
+    "illuminate/support": "^7.0 || ^8.0 || ^9.0 || ^10.0 || ^11.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5",
+    "orchestra/testbench": "^5.20 || ^6.0 || ^7.0 || ^8.0 || ^9.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "FragosoSoftware\\FileConverter\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "FragosoSoftware\\FileConverter\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "test": "phpunit"
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}

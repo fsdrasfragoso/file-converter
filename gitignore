@@ -2,6 +2,7 @@
 # Dependencies
 # =========================
 /vendor/
+vendor
 /composer.lock
 
 # =========================
