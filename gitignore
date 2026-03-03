@@ -1,0 +1,59 @@
+# =========================
+# Dependencies
+# =========================
+/vendor/
+/composer.lock
+
+# =========================
+# PHPUnit
+# =========================
+/phpunit.xml
+/phpunit.xml.dist
+/.phpunit.result.cache
+/tests/_output/
+
+# =========================
+# Coverage & Reports
+# =========================
+/coverage/
+/build/
+/reports/
+
+# =========================
+# Logs
+# =========================
+*.log
+
+# =========================
+# Environment
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# IDE / Editor
+# =========================
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# =========================
+# OS Files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Temporary / Cache
+# =========================
+*.cache
+*.tmp
+*.swp
+
+# =========================
+# Laravel (if testing with Testbench)
+# =========================
+bootstrap/cache/
+storage/
