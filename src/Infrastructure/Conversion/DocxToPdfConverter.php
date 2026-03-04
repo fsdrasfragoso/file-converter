@@ -7,11 +7,11 @@ use FragosoSoftware\FileConverter\Core\Conversion\AbstractConverter;
 
 class DocxToPdfConverter extends AbstractConverter
 {
-    public function convert(): void
-    {
-        $phpWord = IOFactory::load($this->source);
-
-        $writer = IOFactory::createWriter($phpWord, 'PDF');
-        $writer->save($this->destination);
-    }
+     public function convert(string $sourcePath, string $destinationPath): void
+     {
+         $phpWord = IOFactory::load($sourcePath);
+ 
+         $writer = IOFactory::createWriter($phpWord, 'PDF');
+         $writer->save($destinationPath);
+     }
 }

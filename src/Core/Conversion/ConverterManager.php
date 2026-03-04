@@ -35,6 +35,24 @@ class ConverterManager
             throw new \LogicException("Conversor inválido.");
         }
 
-        $converter->convert();
+        $converter->convert($source, $destination);
+    }
+
+    public function convertBinary(string $binary, string $from, string $to): string
+    {
+        $converterClass = $this->registry->resolve($from, $to);
+    
+        $converter = new $converterClass();
+    
+        return $converter->convertFromBinary($binary);
+    }
+    
+    public function convertBase64(string $base64, string $from, string $to): string
+    {
+        $converterClass = $this->registry->resolve($from, $to);
+    
+        $converter = new $converterClass();
+    
+        return $converter->convertFromBase64($base64);
     }
 }
