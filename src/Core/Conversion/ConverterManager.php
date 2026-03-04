@@ -4,6 +4,7 @@ namespace FragosoSoftware\FileConverter\Core\Conversion;
 
 use FragosoSoftware\FileConverter\Contracts\Conversion\ConverterInterface;
 use FragosoSoftware\FileConverter\Infrastructure\Conversion\DocxToPdfConverter;
+use FragosoSoftware\FileConverter\Infrastructure\Conversion\RtfToPdfConverter;
 
 class ConverterManager
 {
@@ -19,6 +20,7 @@ class ConverterManager
     protected function registerDefaultConverters(): void
     {
         $this->registry->register('docx', 'pdf', DocxToPdfConverter::class);
+        $this->registry->register('rtf', 'pdf', RtfToPdfConverter::class);
         
     }
 

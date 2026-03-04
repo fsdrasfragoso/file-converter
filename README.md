@@ -45,4 +45,53 @@ $manager = new ConverterManager();
 
 $manager->convert('arquivo.docx', 'arquivo.pdf');
 ```
+## 📦 Conversão usando Binário
+
+Você pode converter diretamente o conteúdo binário do arquivo sem precisar salvar em disco.
+
+```php
+use FragosoSoftware\FileConverter\Core\Conversion\ConverterManager;
+
+$manager = new ConverterManager();
+
+// Conteúdo binário do arquivo (ex: vindo do Storage, upload, etc)
+$binary = file_get_contents('arquivo.docx');
+
+$pdfBinary = $manager->convertBinary($binary, 'docx', 'pdf');
+
+// Agora você pode salvar
+file_put_contents('arquivo.pdf', $pdfBinary);
+```
+
+## 🔹 Exemplo: RTF → PDF (binário)
+```php
+$binary = file_get_contents('arquivo.rtf');
+
+$pdfBinary = $manager->convertBinary($binary, 'rtf', 'pdf');
+
+file_put_contents('arquivo.pdf', $pdfBinary);
+```
+
+## 📦 Conversão usando Base64
+
+Ideal para: APIs, Microserviços, Comunicação HTTP, Upload via JSON
+
+## 🔹 Exemplo: DOCX → PDF (base64)
+
+```php
+use FragosoSoftware\FileConverter\Core\Conversion\ConverterManager;
+
+$manager = new ConverterManager();
+
+// Base64 do arquivo
+$base64 = base64_encode(file_get_contents('arquivo.docx'));
+
+$pdfBase64 = $manager->convertBase64($base64, 'docx', 'pdf');
+
+// Salvar como arquivo
+file_put_contents(
+    'arquivo.pdf',
+    base64_decode($pdfBase64)
+);
+```
 
