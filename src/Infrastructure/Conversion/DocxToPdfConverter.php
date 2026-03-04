@@ -11,8 +11,11 @@ class DocxToPdfConverter extends AbstractConverter
 {
      public function convert(string $sourcePath, string $destinationPath): void
      {
-       Settings::setPdfRendererName(Settings::PDF_RENDERER_DOMPDF);
-                
+        Settings::setPdfRendererName(Settings::PDF_RENDERER_DOMPDF);
+        
+        Settings::setPdfRendererPath(
+            dirname(dirname((new \ReflectionClass(Dompdf::class))->getFileName()))
+        );
         
          $phpWord = IOFactory::load($sourcePath);
  
