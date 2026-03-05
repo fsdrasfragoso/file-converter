@@ -164,4 +164,78 @@ Spatie Image | Imagens → PDF |
 
 Sempre que possível a biblioteca utiliza uma **engine principal** e mantém um **fallback automático** para aumentar a confiabilidade da conversão.
 
+## Dependências do Sistema
+
+Algumas conversões utilizam ferramentas externas para melhor compatibilidade e desempenho, como LibreOffice e ImageMagick.
+
+Dependendo do formato do arquivo, estas ferramentas podem ser necessárias.
+
+### Ferramentas utilizadas
+
+| Ferramenta             | Utilização                                                     |
+| ---------------------- | -------------------------------------------------------------- |
+| LibreOffice            | Conversão de documentos Office (DOC, DOCX, ODT, PPT, XLS etc.) |
+| ImageMagick            | Conversão e manipulação de imagens                             |
+| Imagick (extensão PHP) | Integração do PHP com ImageMagick                              |
+
+## Instalação em Docker
+
+Exemplo de Dockerfile com todas as dependências necessárias:
+
+```bash
+RUN apk add --no-cache \
+    bash \
+    curl \
+    imagemagick \
+    imagemagick-dev \
+    libreoffice \    
+```
+
+## Instalação no Ubuntu / Debian
+
+```bash
+sudo apt install -y libreoffice
+```
+```bash
+sudo apt install -y imagemagick 
+```    
+```bash
+sudo apt install -y ghostscript  
+```
+```bash
+sudo apt install -y php-imagick  
+```   
+
+## Instalação no Alpine Linux
+```bash
+apk add --no-cache \
+    libreoffice \
+    imagemagick \
+    imagemagick-dev
+```
+## Instalação no MacOS
+
+Usando Homebrew:
+```bash
+brew install libreoffice
+```
+```bash
+brew install imagemagick
+```
+
+## Instalação no Windows
+
+Instale o LibreOffice
+
+https://www.libreoffice.org/download/download/
+
+Instale o ImageMagick
+
+https://imagemagick.org/script/download.php#windows
+
+Durante a instalação marque a opção:
+
+```bash
+Install legacy utilities (convert)
+```
 
