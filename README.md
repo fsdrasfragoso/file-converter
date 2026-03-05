@@ -95,3 +95,73 @@ file_put_contents(
 );
 ```
 
+---
+
+## 📄 Formatos Suportados
+
+A biblioteca suporta conversão de diversos formatos de documentos para PDF utilizando diferentes engines especializadas (LibreOffice, PhpOffice, Dompdf, etc).
+
+### Documentos
+| Formato | Conversão |
+|--------|-----------|
+| DOC | → PDF |
+| DOCX | → PDF |
+| DOT | → PDF |
+| DOTX | → PDF |
+| RTF | → PDF |
+| ODT | → PDF |
+
+### Apresentações
+| Formato | Conversão |
+|--------|-----------|
+| PPT | → PDF |
+| PPTX | → PDF |
+| ODP | → PDF |
+
+### Planilhas
+| Formato | Conversão |
+|--------|-----------|
+| XLS | → PDF |
+| XLSX | → PDF |
+
+### Texto
+| Formato | Conversão |
+|--------|-----------|
+| TXT | → PDF |
+
+### Markdown
+| Formato | Conversão |
+|--------|-----------|
+| MD | → PDF |
+| MARKDOWN | → PDF |
+
+### Imagens
+| Formato | Conversão |
+|--------|-----------|
+| JPG | → PDF |
+| JPEG | → PDF |
+| PNG | → PDF |
+| GIF | → PDF |
+| BMP | → PDF |
+| WEBP | → PDF |
+| TIFF | → PDF |
+| TIF | → PDF |
+
+---
+
+## ⚙️ Engines de Conversão
+
+A biblioteca utiliza diferentes engines dependendo do tipo de arquivo para garantir melhor compatibilidade e performance.
+
+| Engine | Utilizado para |
+|------|----------------|
+LibreOffice | DOC, DOCX, DOT, DOTX, ODT, PPT, PPTX, ODP |
+PhpSpreadsheet | XLS, XLSX |
+PhpWord | fallback para documentos Word |
+CommonMark | Markdown → HTML |
+Dompdf | HTML → PDF |
+Spatie Image | Imagens → PDF |
+
+Sempre que possível a biblioteca utiliza uma **engine principal** e mantém um **fallback automático** para aumentar a confiabilidade da conversão.
+
+
