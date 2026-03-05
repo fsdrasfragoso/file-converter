@@ -45,4 +45,253 @@ abstract class AbstractConverter implements ConverterInterface
 
         return base64_encode($converted);
     }
+
+    /**
+     * Verifica se a função exec() está disponível e não desabilitada.
+     *
+     * @return bool
+     */
+    protected function isExecAvailable(): bool
+    {
+        if (!function_exists('exec')) {
+            return false;
+        }
+        $disabled = explode(',', ini_get('disable_functions'));
+        return !in_array('exec', array_map('trim', $disabled), true);
+    }
+
+
+    /**
+     * Localiza o binário do LibreOffice no sistema.
+     *
+     * @return string|null Caminho completo do executável ou null se não encontrado.
+     */
+    protected function findLibreOfficeBinary(): ?string
+    {
+        $osFamily = PHP_OS_FAMILY ?? (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN' ? 'Windows' : (PHP_OS === 'Darwin' ? 'Darwin' : 'Linux'));
+
+        switch ($osFamily) {
+            case 'Windows':
+                return $this->findLibreOfficeOnWindows();
+            case 'Darwin': // macOS
+                return $this->findLibreOfficeOnMac();
+            default: // Linux e outros Unix-like
+                return $this->findLibreOfficeOnLinux();
+        }
+    }
+
+    /**
+     * Determina se é possível usar o LibreOffice para conversão.
+     * Condições: função exec() disponível e binário do LibreOffice encontrado.
+     *
+     * @return bool
+     */
+    protected function canUseLibreOffice(): bool
+    {
+        return $this->isExecAvailable() && $this->findLibreOfficeBinary() !== null;
+    }
+
+    /**
+     * Verifica se o arquivo de origem existe e pode ser lido.
+     *
+     * @param string $path
+     * @throws \RuntimeException
+     */
+    protected function ensureFileReadable(string $path): void
+    {
+        if (!is_file($path) || !is_readable($path)) {
+            throw new \RuntimeException("Arquivo de origem não encontrado ou sem permissão de leitura: {$path}");
+        }
+    }
+
+
+    /**
+     * Tenta encontrar um binário no PATH do sistema usando which ou command -v.
+     *
+     * @param string $binaryName
+     * @return string|null
+     */
+    protected function findBinaryInPath(string $binaryName): ?string
+    {
+        // Tenta com which
+        $output = [];
+        exec("which {$binaryName} 2>/dev/null", $output, $returnCode);
+        if ($returnCode === 0 && !empty($output[0])) {
+            return $output[0];
+        }
+
+        // Se which falhar, tenta command -v (mais portátil)
+        $output = [];
+        exec("command -v {$binaryName} 2>/dev/null", $output, $returnCode);
+        if ($returnCode === 0 && !empty($output[0])) {
+            return $output[0];
+        }
+
+        return null;
+    }
+
+
+    /**
+     * Procura o LibreOffice em sistemas Linux/Unix.
+     *
+     * @return string|null
+     */
+    protected function findLibreOfficeOnLinux(): ?string
+    {
+        // Primeiro tenta localizar via comando which ou command -v
+        $binary = $this->findBinaryInPath('soffice');
+        if ($binary !== null) {
+            return $binary;
+        }
+
+        // Caminhos comuns de instalação
+        $commonPaths = [
+            '/usr/bin/soffice',
+            '/usr/local/bin/soffice',
+            '/opt/libreoffice*/program/soffice',
+            '/usr/lib/libreoffice/program/soffice',
+        ];
+
+        foreach ($commonPaths as $pattern) {
+            if (strpos($pattern, '*') !== false) {
+                $matches = glob($pattern);
+                if (!empty($matches)) {
+                    return reset($matches);
+                }
+            } elseif (file_exists($pattern)) {
+                return $pattern;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Procura o LibreOffice no macOS.
+     *
+     * @return string|null
+     */
+    protected function findLibreOfficeOnMac(): ?string
+    {
+        // Caminho típico de aplicação no macOS
+        $appPath = '/Applications/LibreOffice.app/Contents/MacOS/soffice';
+        if (file_exists($appPath)) {
+            return $appPath;
+        }
+
+        // Também pode estar em ~/Applications ou outros locais
+        $homeAppPath = getenv('HOME') . '/Applications/LibreOffice.app/Contents/MacOS/soffice';
+        if (file_exists($homeAppPath)) {
+            return $homeAppPath;
+        }
+
+        // Fallback: usar comando mdfind (Spotlight) se disponível
+        $output = [];
+        exec('mdfind "kMDItemKind == \'Application\' && kMDItemDisplayName == \'LibreOffice\'" 2>/dev/null', $output);
+        if (!empty($output[0])) {
+            $foundPath = trim($output[0]) . '/Contents/MacOS/soffice';
+            if (file_exists($foundPath)) {
+                return $foundPath;
+            }
+        }
+
+        // Tenta localizar via which (se estiver no PATH, mas é raro no macOS)
+        return $this->findBinaryInPath('soffice');
+    }
+
+    /**
+     * Verifica se o diretório de destino existe e é gravável; se não existir, tenta criá-lo.
+     *
+     * @param string $dir
+     * @throws \RuntimeException
+     */
+    protected function ensureDirectoryWritable(string $dir): void
+    {
+        if (!is_dir($dir)) {
+            if (!mkdir($dir, 0777, true) && !is_dir($dir)) {
+                throw new \RuntimeException("Não foi possível criar o diretório de destino: {$dir}");
+            }
+        }
+
+        if (!is_writable($dir)) {
+            throw new \RuntimeException("Diretório de destino sem permissão de gravação: {$dir}");
+        }
+    }
+
+    
+
+    /**
+     * Escapa caminho do Windows adicionando aspas e tratando caracteres especiais.
+     *
+     * @param string $path
+     * @return string
+     */
+    protected function escapeWindowsPath(string $path): string
+    {
+        // Se já tiver aspas, retorna como está
+        if (preg_match('/^".*"$/', $path)) {
+            return $path;
+        }
+        // Adiciona aspas duplas para proteger espaços e caracteres especiais
+        return '"' . $path . '"';
+    }
+
+    /**
+     * Procura o LibreOffice no Windows usando múltiplas estratégias.
+     *
+     * @return string|null
+     */
+    protected function findLibreOfficeOnWindows(): ?string
+    {
+        // 1. Tenta localizar via comando where
+        $output = [];
+        exec('where soffice 2>nul', $output, $returnCode);
+        if ($returnCode === 0 && !empty($output[0])) {
+            return $this->escapeWindowsPath($output[0]);
+        }
+
+        // 2. Caminhos comuns de instalação
+        $possiblePaths = [
+            'C:\\Program Files\\LibreOffice\\program\\soffice.exe',
+            'C:\\Program Files (x86)\\LibreOffice\\program\\soffice.exe',
+            // Versões com sufixo (ex: LibreOffice 5, LibreOffice 7)
+            'C:\\Program Files\\LibreOffice*\\program\\soffice.exe',
+            'C:\\Program Files (x86)\\LibreOffice*\\program\\soffice.exe',
+        ];
+
+        foreach ($possiblePaths as $pattern) {
+            if (strpos($pattern, '*') !== false) {
+                // Expande curingas
+                $matches = glob($pattern);
+                if (!empty($matches)) {
+                    return $this->escapeWindowsPath(reset($matches));
+                }
+            } elseif (file_exists($pattern)) {
+                return $this->escapeWindowsPath($pattern);
+            }
+        }
+
+        // 3. Tenta consultar o registro do Windows (requer extensão COM ou reg query)
+        // Usa reg query como fallback adicional (pode ser mais lento)
+        $regPaths = [
+            'HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\soffice.exe',
+            'HKLM\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\App Paths\\soffice.exe',
+        ];
+        foreach ($regPaths as $regPath) {
+            $output = [];
+            exec("reg query \"{$regPath}\" /ve 2>nul", $output, $returnCode);
+            if ($returnCode === 0) {
+                foreach ($output as $line) {
+                    if (preg_match('/\s+\(Default\)\s+REG_SZ\s+(.+)$/i', $line, $matches)) {
+                        $exePath = trim($matches[1]);
+                        if (file_exists($exePath)) {
+                            return $this->escapeWindowsPath($exePath);
+                        }
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
 }
