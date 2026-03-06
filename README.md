@@ -123,6 +123,7 @@ A biblioteca suporta conversão de diversos formatos de documentos para PDF util
 |--------|-----------|
 | XLS | → PDF |
 | XLSX | → PDF |
+| CSV | → PDF |
 
 ### Texto
 | Formato | Conversão |
@@ -184,11 +185,12 @@ Exemplo de Dockerfile com todas as dependências necessárias:
 
 ```bash
 RUN apk add --no-cache \
-    bash \
-    curl \
-    imagemagick \
-    imagemagick-dev \
-    libreoffice \    
+    libreoffice \
+    fontconfig \
+    ttf-dejavu \
+    font-noto \
+    font-noto-cjk \
+    font-noto-emoji 
 ```
 
 ## Instalação no Ubuntu / Debian
@@ -210,8 +212,11 @@ sudo apt install -y php-imagick
 ```bash
 apk add --no-cache \
     libreoffice \
-    imagemagick \
-    imagemagick-dev
+    fontconfig \
+    ttf-dejavu \
+    font-noto \
+    font-noto-cjk \
+    font-noto-emoji
 ```
 ## Instalação no MacOS
 

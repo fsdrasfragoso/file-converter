@@ -43,7 +43,7 @@ class RtfToPdfConverter extends AbstractConverter
      * @param string $destinationPath
      * @throws \RuntimeException
      */
-    private function convertWithLibreOffice(string $sourcePath, string $destinationPath): void
+    protected function convertWithLibreOffice(string $sourcePath, string $destinationPath): void
     {
         $soffice = $this->findLibreOfficeBinary();
         if ($soffice === null) {

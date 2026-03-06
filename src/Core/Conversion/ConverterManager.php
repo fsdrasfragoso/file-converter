@@ -11,6 +11,11 @@ use FragosoSoftware\FileConverter\Infrastructure\Conversion\OdtToPdfConverter;
 use FragosoSoftware\FileConverter\Infrastructure\Conversion\PptxToPdfConverter;
 use FragosoSoftware\FileConverter\Infrastructure\Conversion\MarkdownToPdfConverter;
 use FragosoSoftware\FileConverter\Infrastructure\Conversion\ImageToPdfConverter;
+use FragosoSoftware\FileConverter\Infrastructure\Conversion\CsvToPdfConverter;
+use FragosoSoftware\FileConverter\Infrastructure\Conversion\HtmlToPdfConverter;
+use FragosoSoftware\FileConverter\Infrastructure\Conversion\CsvToJsonConverter;
+
+use Symfony\Component\Process\Exception\LogicException;
 
 class ConverterManager
 {
@@ -34,6 +39,7 @@ class ConverterManager
         $this->registry->register('xlsx', 'pdf', XlsxToPdfConverter::class);
         $this->registry->register('xls', 'pdf', XlsxToPdfConverter::class);
         $this->registry->register('odt', 'pdf', OdtToPdfConverter::class);
+        $this->registry->register('ods', 'pdf', XlsxToPdfConverter::class);
         $this->registry->register('pptx', 'pdf', PptxToPdfConverter::class);
         $this->registry->register('ppt', 'pdf', PptxToPdfConverter::class);
         $this->registry->register('odp', 'pdf', PptxToPdfConverter::class);
@@ -47,6 +53,10 @@ class ConverterManager
         $this->registry->register('webp', 'pdf', ImageToPdfConverter::class);
         $this->registry->register('tiff', 'pdf', ImageToPdfConverter::class);
         $this->registry->register('tif', 'pdf', ImageToPdfConverter::class);
+        $this->registry->register('csv', 'pdf', CsvToPdfConverter::class);
+        $this->registry->register('html', 'pdf', HtmlToPdfConverter::class);
+        $this->registry->register('htm', 'pdf', HtmlToPdfConverter::class); 
+        $this->registry->register('csv', 'json', CsvToJsonConverter::class); 
         
     }
 
@@ -55,12 +65,16 @@ class ConverterManager
         $from = pathinfo($source, PATHINFO_EXTENSION);
         $to   = pathinfo($destination, PATHINFO_EXTENSION);
 
-        $converterClass = $this->registry->resolve($from, $to);
+         try {
+            $converterClass = $this->registry->resolve($from, $to);
+        } catch (LogicException  $e) {
+            throw new LogicException("Não é possível converter de $from para $to.", 0, $e);
+        }  
 
         $converter = new $converterClass($source, $destination);
 
         if (!$converter instanceof ConverterInterface) {
-            throw new \LogicException("Conversor inválido.");
+            throw new LogicException("Conversor inválido.");
         }
 
         $converter->convert($source, $destination);
