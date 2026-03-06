@@ -244,3 +244,18 @@ Durante a instalação marque a opção:
 Install legacy utilities (convert)
 ```
 
+## 📜 Licença
+
+Este projeto é distribuído como software livre e open source sob a licença MIT.
+
+A licença MIT permite que qualquer pessoa:
+
+usar a biblioteca em projetos pessoais ou comerciais
+
+modificar o código
+
+distribuir versões modificadas
+
+incorporar em outros softwares
+
+desde que o aviso de copyright e a licença original sejam mantidos.
