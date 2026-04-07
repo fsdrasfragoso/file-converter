@@ -12,7 +12,7 @@ else
     exit 1
 fi
 
-"$SOFFICE" --headless \
+"$SOFFICE" --headless --norestore --nodefault --nofirststartwizard --invisible \
     --convert-to "pdf:writer_pdf_Export:SelectPdfVersion=1" \
     --outdir "$OUTPUT_DIR" \
     "$INPUT_FILE"

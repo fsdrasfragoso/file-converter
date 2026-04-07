@@ -80,7 +80,7 @@ abstract class AbstractConverter implements ConverterInterface
 
         // Constrói o comando com escapes adequados
         $command = sprintf(
-            '%s --headless --convert-to pdf --outdir %s %s',
+            '%s --headless --norestore --nodefault --nofirststartwizard --invisible --convert-to pdf --outdir %s %s',
             $soffice,
             escapeshellarg($outputDir),
             escapeshellarg($sourcePath)

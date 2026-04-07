@@ -40,7 +40,7 @@ class PptxToPdfConverter extends AbstractConverter
         $outputDir = dirname($destinationPath);
 
         $command = sprintf(
-            'soffice --headless --convert-to pdf --outdir %s %s 2>&1',
+            'soffice --headless --norestore --nodefault --nofirststartwizard --invisible --convert-to pdf --outdir %s %s 2>&1',
             escapeshellarg($outputDir),
             escapeshellarg($sourcePath)
         );
