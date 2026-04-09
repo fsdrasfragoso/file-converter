@@ -13,6 +13,6 @@ else
     exit 1
 fi
 
-"$SOFFICE" --headless --norestore --nodefault --nofirststartwizard --invisible --convert-to pdf --outdir "$OUTPUT_DIR" "$INPUT_FILE"
+"$SOFFICE" --headless --norestore --nodefault --nologo --nofirststartwizard --invisible --convert-to pdf --outdir "$OUTPUT_DIR" "$INPUT_FILE"
 
 exit $?

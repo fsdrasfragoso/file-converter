@@ -2,4 +2,4 @@
 REM %1 = pasta destino
 REM %2 = arquivo de entrada DOC/DOCX
 
-"C:\Program Files\LibreOffice\program\soffice.exe" --headless --norestore --nodefault --nofirststartwizard --invisible --convert-to pdf:writer_pdf_Export --outdir "%~1" "%~2"
+"C:\Program Files\LibreOffice\program\soffice.exe" --headless --norestore --nodefault --nologo --nofirststartwizard --invisible --convert-to pdf:writer_pdf_Export --outdir "%~1" "%~2"

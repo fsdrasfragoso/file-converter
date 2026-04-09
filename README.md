@@ -244,6 +244,42 @@ Durante a instalação marque a opção:
 Install legacy utilities (convert)
 ```
 
+## 🔧 Configuração
+
+### Modo External (Kubernetes/Sidecar)
+
+Para usar com LibreOffice em sidecar container:
+
+```env
+LIBREOFFICE_MODE=external
+LIBREOFFICE_HOST=127.0.0.1
+LIBREOFFICE_PORT=8100
+LIBREOFFICE_TIMEOUT=60
+```
+### Modo Internal (Local)
+
+Para usar LibreOffice instalado localmente:
+
+```env
+LIBREOFFICE_MODE=internal
+LIBREOFFICE_BINARY_PATH=/usr/bin/soffice  # opcional
+```
+### Fallback
+
+A biblioteca automaticamente usa fallback se o LibreOffice falhar:
+
+```env
+LIBREOFFICE_FALLBACK_ENABLED=true
+```
+
+### No Laravel
+
+Publique o arquivo de configuração:
+
+```bach
+php artisan vendor:publish --tag=file-converter-config
+```
+
 ## 📜 Licença
 
 Este projeto é distribuído como software livre e open source sob a licença MIT.
