@@ -42,6 +42,13 @@
       "FragosoSoftware\\FileConverter\\Tests\\": "tests/"
     }
   },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "FragosoSoftware\\FileConverter\\FileConverterServiceProvider"
+      ]
+    }
+  },
   "scripts": {
     "test": "vendor/bin/phpunit"
   },
