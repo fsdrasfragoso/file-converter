@@ -256,6 +256,16 @@ LIBREOFFICE_HOST=127.0.0.1
 LIBREOFFICE_PORT=8100
 LIBREOFFICE_TIMEOUT=60
 ```
+### 📡 Modo HTTP (Microserviço)
+A biblioteca suporta conversão via serviço externo HTTP, permitindo o uso de um microserviço de conversão (ex: FastAPI + LibreOffice).
+
+⚙️ Configuração
+```env
+LIBREOFFICE_MODE=http
+LIBREOFFICE_BASE_URL=http://127.0.0.1:8000
+LIBREOFFICE_TIMEOUT=60
+```
+
 ### Modo Internal (Local)
 
 Para usar LibreOffice instalado localmente:

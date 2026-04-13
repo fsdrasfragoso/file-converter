@@ -5,6 +5,7 @@ namespace FragosoSoftware\FileConverter\Core\Conversion;
 use FragosoSoftware\FileConverter\Contracts\Conversion\ConverterInterface;
 use FragosoSoftware\FileConverter\Config\ConverterConfig;
 use FragosoSoftware\FileConverter\Infrastructure\Conversion\LibreOfficeClient;
+use FragosoSoftware\FileConverter\Infrastructure\Conversion\HttpLibreOfficeClient;
 
 abstract class AbstractConverter implements ConverterInterface
 {
@@ -69,13 +70,23 @@ abstract class AbstractConverter implements ConverterInterface
      */
     protected function convertWithLibreOffice(string $sourcePath, string $destinationPath): void
     {
-        // Verifica se deve usar modo externo
+        if ($this->config->useHttpLibreOffice()) 
+        {
+            $client = new HttpLibreOfficeClient($this->config);
+    
+            if (!$client->isAvailable()) {
+                throw new \RuntimeException('HTTP LibreOffice não disponível em ' . $this->config->getLibreOfficeBaseUrl());
+            }
+    
+            $client->convert($sourcePath, $destinationPath);
+            return;
+        }
+    
         if ($this->config->useExternalLibreOffice()) {
             $this->convertWithExternalLibreOffice($sourcePath, $destinationPath);
             return;
         }
-
-        // Modo interno (tradicional)
+    
         $this->convertWithInternalLibreOffice($sourcePath, $destinationPath);
     }
 

@@ -16,7 +16,7 @@ return [
         | - 'external': Usa LibreOffice externo (sidecar container)
         | - 'internal': Usa LibreOffice instalado localmente
         */
-        'mode' => env('LIBREOFFICE_MODE', 'external'),
+        'mode' => env('LIBREOFFICE_MODE', 'http'),
         
         /*
         | Configurações para modo external
